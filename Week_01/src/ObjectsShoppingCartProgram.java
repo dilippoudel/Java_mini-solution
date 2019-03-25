@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 public class ObjectsShoppingCartProgram {
 
@@ -22,10 +23,9 @@ public class ObjectsShoppingCartProgram {
 
 class Product{
 	private String name;
-	private String productNumber;
+	private int productNumber;
 	private double price;
-	public Product(String name, String productNumber, double price) {
-		super();
+	public Product(int productNumber, String name, double price) {
 		this.name = name;
 		this.productNumber = productNumber;
 		this.price = price;
@@ -33,28 +33,24 @@ class Product{
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getProductNumber() {
+	
+	public int getProductNumber() {
 		return productNumber;
 	}
-	public void setProductNumber(String productNumber) {
-		this.productNumber = productNumber;
-	}
+	
 	public double getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
-		this.price = price;
-	}
-	
 	
 }
 
+
+
+
 class Item{
-	Product product;
+	private Product product;
 	private int quantity;
+	
 	public Item(Product product, int quantity) {
 		this.product = product;
 		this.quantity = quantity;
@@ -62,17 +58,13 @@ class Item{
 	public Product getProduct() {
 		return product;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+	
 	public int getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+	
 	public double getSubtotal() {
-		return (quantity+this.quantity);
+		return product.getPrice() * quantity;
 	}
 	
 }
@@ -91,17 +83,44 @@ class ShoppingCart{
 	
 	public void remove(Product product) {
 		for(Item p : itemList) {
-			p.getProduct();
+			if(product.equals(p.getProduct())) {
+				itemList.remove(p);
+			}
 		}
 	}
 	
 	
 	public  double getTotalPrice() {
+		double total = 0.00;
 		for(Item p: itemList) {
-			double x = p.getSubtotal()*this.itemList;
+			total += p.getSubtotal();
 		}
-		return 0;
+		return total;
 	}
+	 public String toString() {
+		 String msg = "";
+		 if(itemList.isEmpty()) {
+			 msg = "There are no items in the shopping cart.";
+		 }
+		 else {
+			 DecimalFormat twoDecimal = new DecimalFormat("0.00");
+			 double total = 0.00;
+			 double grandPrice = 0.00;
+			 double priceUnit = 0.00;
+			 String message = "";
+			 for(Item i: itemList) {
+				 total = i.getSubtotal();
+				 priceUnit = i.getProduct().getPrice();
+				 message += i.getProduct().getProductNumber()+": "+i.getProduct().getName() + ", quantity: "+
+				 i.getQuantity() + ", unit price: " + twoDecimal.format(priceUnit).replace(".", ",")+ ", subtotal: " + twoDecimal.format(total).replace(".", ",") + "\n"; ;
+				 grandPrice +=total;
+			 }
+			 System.out.println("\n===Shopping Cart===\n");
+		return message + "TOTAL PRICE: " + twoDecimal.format(grandPrice).replace(".", ",") + " euros";
+
+		 }
+		 return msg;
+	 }
 	
 	
 	
